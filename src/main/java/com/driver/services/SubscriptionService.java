@@ -63,6 +63,10 @@ public class SubscriptionService {
         User user = optionalUser.get();
 
         Subscription userSubscription = user.getSubscription();
+        if (userSubscription == null) {
+            // Handle case where user does not have a subscription
+            throw new Exception("User does not have a subscription");
+        }
         if (userSubscription.getSubscriptionType() == ELITE) {
             throw new Exception("Already at the best subscription");
         }
