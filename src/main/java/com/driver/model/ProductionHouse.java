@@ -1,11 +1,13 @@
 package com.driver.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Table
+
 public class ProductionHouse {
 
     @Id

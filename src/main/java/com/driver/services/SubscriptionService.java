@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import static com.driver.model.SubscriptionType.*;
 
 @Service
 public class SubscriptionService {
@@ -26,24 +29,138 @@ public class SubscriptionService {
 
         //Save The subscription Object into the Db and return the total Amount that user has to pay
 
-        return null;
+        Optional<User> optionalUser = userRepository.findById(subscriptionEntryDto.getUserId());
+        if(!optionalUser.isPresent())
+        {
+           return -1;
+        }
+        User user = optionalUser.get();
+        int subscriptionCost = calculateSubscriptionCost(subscriptionEntryDto);
+        Subscription subscription=new Subscription();
+        subscription.setUser(user);
+        subscription.setSubscriptionType(subscriptionEntryDto.getSubscriptionType());
+        subscription.setNoOfScreensSubscribed(subscriptionEntryDto.getNoOfScreensRequired());
+        subscription.setStartSubscriptionDate(new Date());
+        subscription.setCost(subscriptionCost);
+
+        subscriptionRepository.save(subscription);
+
+        return subscriptionCost;
+
     }
+
+
 
     public Integer upgradeSubscription(Integer userId)throws Exception{
 
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
         //In all other cases just try to upgrade the subscription and tell the difference of price that user has to pay
         //update the subscription in the repository
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new Exception("User not found");
+        }
+        User user = optionalUser.get();
 
-        return null;
+        Subscription userSubscription = user.getSubscription();
+        if (userSubscription.getSubscriptionType() == ELITE) {
+            throw new Exception("Already at the best subscription");
+        }
+        // Determine the next subscription level
+        SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
+        SubscriptionType nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
+
+        // Calculate price difference
+        int currentPrice = userSubscription.getCost();
+        int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
+        int priceDifference = nextPrice - currentPrice;
+
+        // Update the user's subscription
+        userSubscription.setSubscriptionType(nextSubscriptionType);
+        subscriptionRepository.save(userSubscription);
+
+        return priceDifference;
+
     }
+
+
 
     public Integer calculateTotalRevenueOfHotstar(){
 
         //We need to find out total Revenue of hotstar : from all the subscriptions combined
         //Hint is to use findAll function from the SubscriptionDb
 
-        return null;
+        List<Subscription> subscriptions=subscriptionRepository.findAll();
+        int totalRevenue=0;
+        for(Subscription subscription:subscriptions)
+        {
+            totalRevenue+=subscription.getCost();
+        }
+        return totalRevenue;
     }
 
+    private int calculateSubscriptionCost(SubscriptionEntryDto subscriptionEntryDto) {
+        int baseCost;
+        switch (subscriptionEntryDto.getSubscriptionType()) {
+            case BASIC:
+                baseCost = 500;
+                break;
+            case PRO:
+                baseCost = 800;
+                break;
+            case ELITE:
+                baseCost = 1000;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid subscription type");
+        }
+        return baseCost + subscriptionEntryDto.getNoOfScreensRequired() * getScreenCost(subscriptionEntryDto.getSubscriptionType());
+    }
+
+    private int getScreenCost(SubscriptionType subscriptionType) {
+        switch (subscriptionType) {
+            case BASIC:
+                return 200;
+            case PRO:
+                return 250;
+            case ELITE:
+                return 350;
+            default:
+                throw new IllegalArgumentException("Invalid subscription type");
+        }
+    }
+
+    private SubscriptionType getNextSubscriptionType(SubscriptionType currentSubscriptionType) {
+        switch (currentSubscriptionType) {
+            case BASIC:
+                return PRO;
+            case PRO:
+                return ELITE;
+            default:
+                throw new IllegalArgumentException("Cannot upgrade from ELITE subscription");
+        }
+    }
+
+    private int calculateNewSubscriptionCost(SubscriptionType nextSubscriptionType, int noOfScreensSubscribed) {
+
+        int baseCost;
+
+        switch (nextSubscriptionType) {
+            case BASIC:
+                baseCost = 500;
+                break;
+            case PRO:
+                baseCost = 800;
+                break;
+            case ELITE:
+                baseCost = 1000;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid subscription type");
+        }
+        return baseCost + noOfScreensSubscribed * getScreenCost(nextSubscriptionType);
+    }
+
+
 }
+

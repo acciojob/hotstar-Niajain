@@ -30,6 +30,9 @@ public class Subscription {
     @JoinColumn
     private User user;
 
+    private int subscriptionCost;
+
+
     public Subscription(SubscriptionType subscriptionType, int noOfScreensSubscribed, Date startSubscriptionDate, int totalAmountPaid) {
         this.subscriptionType = subscriptionType;
         this.noOfScreensSubscribed = noOfScreensSubscribed;
@@ -65,7 +68,7 @@ public class Subscription {
         this.noOfScreensSubscribed = noOfScreensSubscribed;
     }
 
-    public Date getStartSubscriptionDate() {
+    public Date getStartSubscriptionDate(Date date) {
         return startSubscriptionDate;
     }
 
@@ -87,5 +90,13 @@ public class Subscription {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCost(int subscriptionCost) {
+        this.subscriptionCost=subscriptionCost;
+    }
+
+    public int getCost() {
+        return subscriptionCost;
     }
 }
