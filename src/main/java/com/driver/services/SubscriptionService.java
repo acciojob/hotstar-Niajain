@@ -66,17 +66,20 @@ SubscriptionService {
         User user = optionalUser.get();
 
         Subscription userSubscription = user.getSubscription();
-//        if (userSubscription == null) {
-//            // Handle case where user does not have a subscription
-////            throw new Exception("User does not have a subscription");
-//            return -1;
-//        }
+        SubscriptionType nextSubscriptionType;
         if (userSubscription.getSubscriptionType() == ELITE) {
             throw new Exception("Already the best subscription");
         }
-        // Determine the next subscription level
-        SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
-        SubscriptionType nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
+
+        if (userSubscription.getSubscriptionType() == null) {
+            // Handle case where user does not have a subscription
+            nextSubscriptionType = BASIC;
+        }
+        else {
+            // Determine the next subscription level
+            SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
+            nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
+        }
 
         // Calculate price difference
         int currentPrice = userSubscription.getTotalAmountPaid();
@@ -147,6 +150,7 @@ SubscriptionService {
                 return ELITE;
             default:
                 throw new IllegalArgumentException("Cannot upgrade from ELITE subscription");
+
         }
     }
 
