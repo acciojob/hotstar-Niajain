@@ -37,18 +37,18 @@ public class UserService {
         //Hint: Take out all the Webseries from the WebRepository
 
         Optional<User> optionalUser=userRepository.findById(userId);
-        User user=new User();
+
         if(!optionalUser.isPresent())
         {
            return -1;
         }
-        user=optionalUser.get();
+        User user=optionalUser.get();
         int userAgeLimit=user.getAge();
         SubscriptionType userSubscriptionType=user.getSubscription().getSubscriptionType();
         List<WebSeries> WebSeriesNames=webSeriesRepository.findAll();
 
         long countOfViewableWebSeries=WebSeriesNames.stream()
-                .filter(webSeries -> webSeries.getAgeLimit() <= userAgeLimit &&
+                .filter(webSeries -> webSeries.getAgeLimit() < userAgeLimit &&
                         webSeries.getSubscriptionType() == userSubscriptionType).count();
 
         return (int) countOfViewableWebSeries;
