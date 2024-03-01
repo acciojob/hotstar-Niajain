@@ -37,20 +37,20 @@ SubscriptionService {
            return -1;
         }
         User user = optionalUser.get();
-        int subscriptionCost = calculateSubscriptionCost(subscriptionEntryDto);
+        int totalAmountPaid = calculateSubscriptionCost(subscriptionEntryDto);
         Subscription subscription=new Subscription();
         subscription.setUser(user);
         subscription.setSubscriptionType(subscriptionEntryDto.getSubscriptionType());
         subscription.setNoOfScreensSubscribed(subscriptionEntryDto.getNoOfScreensRequired());
         subscription.setStartSubscriptionDate(new Date());
-        subscription.setCost(subscriptionCost);
+        subscription.setTotalAmountPaid(totalAmountPaid);
 
         subscriptionRepository.save(subscription);
 
-        return subscriptionCost;
+        return totalAmountPaid;
 
     }
-
+//subscriptionCost
 
 
     public Integer upgradeSubscription(Integer userId)throws Exception{
@@ -79,13 +79,13 @@ SubscriptionService {
         SubscriptionType nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
 
         // Calculate price difference
-        int currentPrice = userSubscription.getCost();
+        int currentPrice = userSubscription.getTotalAmountPaid();
         int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
         int priceDifference = nextPrice - currentPrice;
 
         // Update the user's subscription
         userSubscription.setSubscriptionType(nextSubscriptionType);
-        userSubscription.setCost(nextPrice);
+        userSubscription.setTotalAmountPaid(nextPrice);
         subscriptionRepository.save(userSubscription);
 
         return priceDifference;
@@ -103,7 +103,7 @@ SubscriptionService {
         int totalRevenue=0;
         for(Subscription subscription:subscriptions)
         {
-            totalRevenue+=subscription.getCost();
+            totalRevenue+=subscription.getTotalAmountPaid();
         }
         return totalRevenue;
     }

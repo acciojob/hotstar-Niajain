@@ -38,10 +38,11 @@ public class UserService {
 
         Optional<User> optionalUser=userRepository.findById(userId);
         User user=new User();
-        if(optionalUser.isPresent())
+        if(!optionalUser.isPresent())
         {
-            user=optionalUser.get();
+           return -1;
         }
+        user=optionalUser.get();
         int userAgeLimit=user.getAge();
         SubscriptionType userSubscriptionType=user.getSubscription().getSubscriptionType();
         List<WebSeries> WebSeriesNames=webSeriesRepository.findAll();

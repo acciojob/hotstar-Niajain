@@ -30,7 +30,6 @@ public class Subscription {
     @JoinColumn
     private User user;
 
-    private int subscriptionCost;
 
 
     public Subscription(SubscriptionType subscriptionType, int noOfScreensSubscribed, Date startSubscriptionDate, int totalAmountPaid) {
@@ -92,11 +91,5 @@ public class Subscription {
         this.user = user;
     }
 
-    public void setCost(int subscriptionCost) {
-        this.subscriptionCost=subscriptionCost;
-    }
 
-    public int getCost() {
-        return subscriptionCost;
-    }
 }
