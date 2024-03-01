@@ -17,7 +17,9 @@ import java.util.Optional;
 import static com.driver.model.SubscriptionType.*;
 
 @Service
-public class SubscriptionService {
+public class
+
+SubscriptionService {
 
     @Autowired
     SubscriptionRepository subscriptionRepository;
@@ -58,18 +60,19 @@ public class SubscriptionService {
         //update the subscription in the repository
         Optional<User> optionalUser = userRepository.findById(userId);
         if (!optionalUser.isPresent()) {
-            throw new Exception("User not found");
+//            throw new Exception("User not found");
+            return -1;
         }
         User user = optionalUser.get();
 
         Subscription userSubscription = user.getSubscription();
-        if (userSubscription == null) {
-            // Handle case where user does not have a subscription
-//            throw new Exception("User does not have a subscription");
-            return -1;
-        }
+//        if (userSubscription == null) {
+//            // Handle case where user does not have a subscription
+////            throw new Exception("User does not have a subscription");
+//            return -1;
+//        }
         if (userSubscription.getSubscriptionType() == ELITE) {
-            throw new Exception("Already at the best subscription");
+            throw new Exception("Already the best subscription");
         }
         // Determine the next subscription level
         SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
@@ -82,6 +85,7 @@ public class SubscriptionService {
 
         // Update the user's subscription
         userSubscription.setSubscriptionType(nextSubscriptionType);
+        userSubscription.setCost(nextPrice);
         subscriptionRepository.save(userSubscription);
 
         return priceDifference;
