@@ -47,9 +47,19 @@ public class UserService {
         SubscriptionType userSubscriptionType=user.getSubscription().getSubscriptionType();
         List<WebSeries> WebSeriesNames=webSeriesRepository.findAll();
 
-        long countOfViewableWebSeries=WebSeriesNames.stream()
-                .filter(webSeries -> webSeries.getAgeLimit() < userAgeLimit &&
-                        webSeries.getSubscriptionType() == userSubscriptionType).count();
+//        long countOfViewableWebSeries=WebSeriesNames.stream()
+//                .filter(webSeries -> webSeries.getAgeLimit() < userAgeLimit &&
+//                        webSeries.getSubscriptionType() == userSubscriptionType).count();
+        long countOfViewableWebSeries = 0;
+
+        for (WebSeries webSeries : WebSeriesNames) {
+            // Check if the user can watch the web series based on age limit and subscription type
+            if (webSeries.getAgeLimit() <= userAgeLimit &&
+                    webSeries.getSubscriptionType() == userSubscriptionType) {
+                // Increment the count if the user can watch the web series
+                countOfViewableWebSeries++;
+            }
+        }
 
         return (int) countOfViewableWebSeries;
     }
