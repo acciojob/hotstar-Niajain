@@ -2,6 +2,7 @@ package com.driver.services;
 
 
 import com.driver.EntryDto.SubscriptionEntryDto;
+import com.driver.exception.SubscriptionNotFoundException;
 import com.driver.model.Subscription;
 import com.driver.model.SubscriptionType;
 import com.driver.model.User;
@@ -69,8 +70,7 @@ SubscriptionService {
 
         if(userSubscription==null)
         {
-//            throw new Exception("User doesn't buy any subscription");
-            return -1;
+            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
         }
 
         SubscriptionType nextSubscriptionType;
