@@ -66,14 +66,20 @@ SubscriptionService {
         User user = optionalUser.get();
 
         Subscription userSubscription = user.getSubscription();
-        SubscriptionType nextSubscriptionType;
-        if (userSubscription.getSubscriptionType() == ELITE) {
-            throw new Exception("Already the best subscription");
+
+        if(userSubscription==null)
+        {
+            return -1;
         }
+
+        SubscriptionType nextSubscriptionType;
 
         if (userSubscription.getSubscriptionType() == null) {
             // Handle case where user does not have a subscription
             nextSubscriptionType = BASIC;
+        }
+        else if (userSubscription.getSubscriptionType() == ELITE) {
+            throw new Exception("Already the best subscription");
         }
         else {
             // Determine the next subscription level
@@ -90,6 +96,8 @@ SubscriptionService {
         userSubscription.setSubscriptionType(nextSubscriptionType);
         userSubscription.setTotalAmountPaid(nextPrice);
         subscriptionRepository.save(userSubscription);
+        userRepository.save(user);
+
 
         return priceDifference;
 
@@ -124,7 +132,7 @@ SubscriptionService {
                 baseCost = 1000;
                 break;
             default:
-                throw new IllegalArgumentException("Invalid subscription type");
+                baseCost=0;
         }
         return baseCost + subscriptionEntryDto.getNoOfScreensRequired() * getScreenCost(subscriptionEntryDto.getSubscriptionType());
     }
@@ -138,7 +146,7 @@ SubscriptionService {
             case ELITE:
                 return 350;
             default:
-                throw new IllegalArgumentException("Invalid subscription type");
+                return 0;
         }
     }
 
