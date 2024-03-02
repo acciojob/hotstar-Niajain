@@ -70,14 +70,15 @@ SubscriptionService {
 
         if(userSubscription==null)
         {
-            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
+//            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
+            return -1;
         }
 
         SubscriptionType nextSubscriptionType;
 
 
         if (userSubscription.getSubscriptionType() == ELITE) {
-            throw new Exception("Already the best subscription");
+            throw new Exception("Already the best Subscription");
         }
         else if (userSubscription.getSubscriptionType() == null) {
             // Handle case where user does not have a subscription
