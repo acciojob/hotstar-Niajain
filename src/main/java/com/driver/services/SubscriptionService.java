@@ -59,107 +59,107 @@ SubscriptionService {
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
         //In all other cases just try to upgrade the subscription and tell the difference of price that user has to pay
         //update the subscription in the repository
-//        Optional<User> optionalUser = userRepository.findById(userId);
-//        if (!optionalUser.isPresent()) {
-//            throw new Exception("User not found");
-////            return -1;
-//        }
-//        User user = optionalUser.get();
-//
-//        Subscription userSubscription = user.getSubscription();
-//
-//        if(userSubscription==null)
-//        {
-////            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new Exception("User not found");
 //            return -1;
-//        }
-//
-//        SubscriptionType nextSubscriptionType;
-//
-//
-//        if (userSubscription.getSubscriptionType() == ELITE) {
-//            throw new Exception("Already the best Subscription");
-//        }
-//        else if (userSubscription.getSubscriptionType() == null) {
-//            // Handle case where user does not have a subscription
-////            nextSubscriptionType = BASIC;
-//            return -1;
-//        }
-//        else {
-//            // Determine the next subscription level
-//            SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
-//            nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
-//        }
-//
-//        // Calculate price difference
-//        int currentPrice = userSubscription.getTotalAmountPaid();
-//        int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
-//        int priceDifference = nextPrice - currentPrice;
-//
-//        // Update the user's subscription
-//        userSubscription.setSubscriptionType(nextSubscriptionType);
-//        userSubscription.setTotalAmountPaid(nextPrice);
-//        subscriptionRepository.save(userSubscription);
-//        userRepository.save(user);
-//
-//
-//        return priceDifference;
-
-        Optional<User> optionalUser=userRepository.findById(userId);
-        if(!optionalUser.isPresent())
-        {
-            throw new Exception("user not found");
         }
-        User user=optionalUser.get();
+        User user = optionalUser.get();
 
-        Subscription subscription=user.getSubscription();
-        Integer newAmount;
+        Subscription userSubscription = user.getSubscription();
 
-        if(subscription.getSubscriptionType()== ELITE)
+        if(userSubscription==null)
         {
-            throw new Exception("Already the best Subscription");
-        }
-        else if (subscription.getSubscriptionType() == null) {
-//            // Handle case where user does not have a subscription
-////            nextSubscriptionType = BASIC;
+//            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
             return -1;
         }
-        else if(subscription.getSubscriptionType()== BASIC)
-        {
-            subscription.setSubscriptionType(PRO);
-            newAmount=getAmoutToPay(PRO,subscription.getNoOfScreensSubscribed());
+
+        SubscriptionType nextSubscriptionType;
+
+
+        if (userSubscription.getSubscriptionType() == ELITE) {
+            throw new Exception("Already the best Subscription");
+        }
+        else if (userSubscription.getSubscriptionType() == null) {
+            // Handle case where user does not have a subscription
+//            nextSubscriptionType = BASIC;
+            return -1;
         }
         else {
-            subscription.setSubscriptionType(ELITE);
-            newAmount=getAmoutToPay(ELITE,subscription.getNoOfScreensSubscribed());
+            // Determine the next subscription level
+            SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
+            nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
         }
-        Integer amountDifference=newAmount-subscription.getTotalAmountPaid();
-        subscription.setTotalAmountPaid(newAmount);
-        subscriptionRepository.save(subscription);
+
+        // Calculate price difference
+        int currentPrice = userSubscription.getTotalAmountPaid();
+        int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
+        int priceDifference = nextPrice - currentPrice;
+
+        // Update the user's subscription
+        userSubscription.setSubscriptionType(nextSubscriptionType);
+        userSubscription.setTotalAmountPaid(nextPrice);
+        subscriptionRepository.save(userSubscription);
         userRepository.save(user);
-        return amountDifference;
+
+
+        return priceDifference;
+
+//        Optional<User> optionalUser=userRepository.findById(userId);
+//        if(!optionalUser.isPresent())
+//        {
+//            throw new Exception("user not found");
+//        }
+//        User user=optionalUser.get();
+//
+//        Subscription subscription=user.getSubscription();
+//        Integer newAmount;
+//
+//        if(subscription.getSubscriptionType()== ELITE)
+//        {
+//            throw new Exception("Already the best Subscription");
+//        }
+//        else if (subscription.getSubscriptionType() == null) {
+////            // Handle case where user does not have a subscription
+//////            nextSubscriptionType = BASIC;
+//            return -1;
+//        }
+//        else if(subscription.getSubscriptionType()== BASIC)
+//        {
+//            subscription.setSubscriptionType(PRO);
+//            newAmount=getAmoutToPay(PRO,subscription.getNoOfScreensSubscribed());
+//        }
+//        else {
+//            subscription.setSubscriptionType(ELITE);
+//            newAmount=getAmoutToPay(ELITE,subscription.getNoOfScreensSubscribed());
+//        }
+//        Integer amountDifference=newAmount-subscription.getTotalAmountPaid();
+//        subscription.setTotalAmountPaid(newAmount);
+//        subscriptionRepository.save(subscription);
+//        userRepository.save(user);
+//        return amountDifference;
 
 
     }
 
-    private Integer getAmoutToPay(SubscriptionType subscriptionType, int noOfScreensSubscribed) {
-        int pricePlanss,var;
-        if(subscriptionType==BASIC)
-        {
-            pricePlanss=500;
-            var=200;
-        } else if (subscriptionType== PRO) {
-            pricePlanss=800;
-            var=250;
-
-        }
-        else
-        {
-            pricePlanss=1000;
-            var=350;
-        }
-        return pricePlanss+(var*noOfScreensSubscribed);
-    }
+//    private Integer getAmoutToPay(SubscriptionType subscriptionType, int noOfScreensSubscribed) {
+//        int pricePlanss,var;
+//        if(subscriptionType==BASIC)
+//        {
+//            pricePlanss=500;
+//            var=200;
+//        } else if (subscriptionType== PRO) {
+//            pricePlanss=800;
+//            var=250;
+//
+//        }
+//        else
+//        {
+//            pricePlanss=1000;
+//            var=350;
+//        }
+//        return pricePlanss+(var*noOfScreensSubscribed);
+//    }
 
 
     public Integer calculateTotalRevenueOfHotstar(){
