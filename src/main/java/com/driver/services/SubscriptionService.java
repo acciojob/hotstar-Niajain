@@ -82,7 +82,7 @@ SubscriptionService {
         else if (userSubscription.getSubscriptionType() == null) {
             // Handle case where user does not have a subscription
 //            nextSubscriptionType = BASIC;
-            throw new Exception("User doesn't have subscritpion type");
+            return -1;
         }
         else {
             // Determine the next subscription level
