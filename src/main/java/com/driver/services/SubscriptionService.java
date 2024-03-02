@@ -60,8 +60,8 @@ SubscriptionService {
         //update the subscription in the repository
         Optional<User> optionalUser = userRepository.findById(userId);
         if (!optionalUser.isPresent()) {
-            throw new Exception("User not found");
-//            return -1;
+//            throw new Exception("User not found");
+            return -1;
         }
         User user = optionalUser.get();
 
@@ -75,12 +75,14 @@ SubscriptionService {
 
         SubscriptionType nextSubscriptionType;
 
-        if (userSubscription.getSubscriptionType() == null) {
-            // Handle case where user does not have a subscription
-            nextSubscriptionType = BASIC;
-        }
-        else if (userSubscription.getSubscriptionType() == ELITE) {
+
+        if (userSubscription.getSubscriptionType() == ELITE) {
             throw new Exception("Already the best subscription");
+        }
+        else if (userSubscription.getSubscriptionType() == null) {
+            // Handle case where user does not have a subscription
+//            nextSubscriptionType = BASIC;
+            throw new Exception("User doesn't have subscritpion type");
         }
         else {
             // Determine the next subscription level
