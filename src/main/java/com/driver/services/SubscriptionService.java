@@ -60,8 +60,8 @@ SubscriptionService {
         //update the subscription in the repository
         Optional<User> optionalUser = userRepository.findById(userId);
         if (!optionalUser.isPresent()) {
-//            throw new Exception("User not found");
-            return -1;
+            throw new Exception("User not found");
+//            return -1;
         }
         User user = optionalUser.get();
 
@@ -69,7 +69,8 @@ SubscriptionService {
 
         if(userSubscription==null)
         {
-            return -1;
+            throw new Exception("User doesn't buy any subscription");
+//            return -1;
         }
 
         SubscriptionType nextSubscriptionType;
