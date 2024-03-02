@@ -131,6 +131,7 @@ SubscriptionService {
         Integer amountDifference=newAmount-subscription.getTotalAmountPaid();
         subscription.setTotalAmountPaid(newAmount);
         subscriptionRepository.save(subscription);
+        userRepository.save(user);
         return amountDifference;
 
 
