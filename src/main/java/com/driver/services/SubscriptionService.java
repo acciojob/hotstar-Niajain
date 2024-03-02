@@ -77,7 +77,8 @@ SubscriptionService {
 
         if (userSubscription.getSubscriptionType() == null) {
             // Handle case where user does not have a subscription
-            nextSubscriptionType = BASIC;
+//            nextSubscriptionType = BASIC;
+            return -1;
         }
         else if (userSubscription.getSubscriptionType() == ELITE) {
             throw new Exception("Already the best subscription");
