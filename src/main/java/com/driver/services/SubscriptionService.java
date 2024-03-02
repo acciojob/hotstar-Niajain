@@ -69,8 +69,8 @@ SubscriptionService {
 
         if(userSubscription==null)
         {
-            throw new Exception("User doesn't buy any subscription");
-//            return -1;
+//            throw new Exception("User doesn't buy any subscription");
+            return -1;
         }
 
         SubscriptionType nextSubscriptionType;
