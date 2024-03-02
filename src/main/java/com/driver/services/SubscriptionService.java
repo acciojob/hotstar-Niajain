@@ -59,54 +59,101 @@ SubscriptionService {
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
         //In all other cases just try to upgrade the subscription and tell the difference of price that user has to pay
         //update the subscription in the repository
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (!optionalUser.isPresent()) {
+//        Optional<User> optionalUser = userRepository.findById(userId);
+//        if (!optionalUser.isPresent()) {
 //            throw new Exception("User not found");
-            return -1;
-        }
-        User user = optionalUser.get();
-
-        Subscription userSubscription = user.getSubscription();
-
-        if(userSubscription==null)
-        {
-//            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
-            return -1;
-        }
-
-        SubscriptionType nextSubscriptionType;
-
-
-        if (userSubscription.getSubscriptionType().equals(ELITE)) {
-            throw new Exception("Already the best Subscription");
-        }
-//        else if (userSubscription.getSubscriptionType().equals(null)) {
+////            return -1;
+//        }
+//        User user = optionalUser.get();
+//
+//        Subscription userSubscription = user.getSubscription();
+//
+//        if(userSubscription==null)
+//        {
+////            throw new SubscriptionNotFoundException("User doesn't buy any subscription");
+//            return -1;
+//        }
+//
+//        SubscriptionType nextSubscriptionType;
+//
+//
+//        if (userSubscription.getSubscriptionType() == ELITE) {
+//            throw new Exception("Already the best Subscription");
+//        }
+//        else if (userSubscription.getSubscriptionType() == null) {
 //            // Handle case where user does not have a subscription
 ////            nextSubscriptionType = BASIC;
 //            return -1;
 //        }
-        else {
-            // Determine the next subscription level
-            SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
-            nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
+//        else {
+//            // Determine the next subscription level
+//            SubscriptionType currentSubscriptionType = userSubscription.getSubscriptionType();
+//            nextSubscriptionType = getNextSubscriptionType(currentSubscriptionType);
+//        }
+//
+//        // Calculate price difference
+//        int currentPrice = userSubscription.getTotalAmountPaid();
+//        int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
+//        int priceDifference = nextPrice - currentPrice;
+//
+//        // Update the user's subscription
+//        userSubscription.setSubscriptionType(nextSubscriptionType);
+//        userSubscription.setTotalAmountPaid(nextPrice);
+//        subscriptionRepository.save(userSubscription);
+//        userRepository.save(user);
+//
+//
+//        return priceDifference;
+
+        Optional<User> optionalUser=userRepository.findById(userId);
+        if(!optionalUser.isPresent())
+        {
+            throw new Exception("user not found");
         }
+        User user=optionalUser.get();
 
-        // Calculate price difference
-        int currentPrice = userSubscription.getTotalAmountPaid();
-        int nextPrice = calculateNewSubscriptionCost(nextSubscriptionType, userSubscription.getNoOfScreensSubscribed());
-        int priceDifference = nextPrice - currentPrice;
+        Subscription subscription=user.getSubscription();
+        Integer newAmount;
 
-        // Update the user's subscription
-        userSubscription.setSubscriptionType(nextSubscriptionType);
-        userSubscription.setTotalAmountPaid(nextPrice);
-        subscriptionRepository.save(userSubscription);
-        userRepository.save(user);
+        if(subscription.getSubscriptionType()== ELITE)
+        {
+            throw new Exception("Already the best Subscription");
+        }
+        else if(subscription.getSubscriptionType()== BASIC)
+        {
+            subscription.setSubscriptionType(PRO);
+            newAmount=getAmoutToPay(PRO,subscription.getNoOfScreensSubscribed());
+        }
+        else {
+            subscription.setSubscriptionType(ELITE);
+            newAmount=getAmoutToPay(ELITE,subscription.getNoOfScreensSubscribed());
+        }
+        Integer amountDifference=newAmount-subscription.getTotalAmountPaid();
+        subscription.setTotalAmountPaid(newAmount);
+        subscriptionRepository.save(subscription);
+        return amountDifference;
 
-
-        return priceDifference;
 
     }
 
+    private Integer getAmoutToPay(SubscriptionType subscriptionType, int noOfScreensSubscribed) {
+        int pricePlanss,var;
+        if(subscriptionType==BASIC)
+        {
+            pricePlanss=500;
+            var=200;
+        } else if (subscriptionType== PRO) {
+            pricePlanss=800;
+            var=250;
+
+        }
+        else
+        {
+            pricePlanss=1000;
+            var=350;
+        }
+        return pricePlanss+(var*noOfScreensSubscribed);
+    }
 
 
     public Integer calculateTotalRevenueOfHotstar(){
