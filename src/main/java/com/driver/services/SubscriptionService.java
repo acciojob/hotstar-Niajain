@@ -119,6 +119,11 @@ SubscriptionService {
         {
             throw new Exception("Already the best Subscription");
         }
+        else if (subscription.getSubscriptionType() == null) {
+//            // Handle case where user does not have a subscription
+////            nextSubscriptionType = BASIC;
+            return -1;
+        }
         else if(subscription.getSubscriptionType()== BASIC)
         {
             subscription.setSubscriptionType(PRO);
