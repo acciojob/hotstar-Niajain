@@ -49,8 +49,7 @@ public class UserService {
 
         long countOfViewableWebSeries=WebSeriesNames.stream()
                 .filter(webSeries -> webSeries.getAgeLimit() < userAgeLimit &&
-                        webSeries.getSubscriptionType() == userSubscriptionType).count();
-
+                        webSeries.getSubscriptionType().getPriority() <= userSubscriptionType.getPriority()).count();
         return (int) countOfViewableWebSeries;
     }
 
