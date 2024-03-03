@@ -47,7 +47,7 @@ SubscriptionService {
         subscription.setTotalAmountPaid(totalAmountPaid);
 
         subscriptionRepository.save(subscription);
-
+        userRepository.save(user);
         return totalAmountPaid;
 
     }
