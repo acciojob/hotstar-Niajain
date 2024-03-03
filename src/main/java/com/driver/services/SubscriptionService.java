@@ -46,6 +46,8 @@ SubscriptionService {
         subscription.setStartSubscriptionDate(new Date());
         subscription.setTotalAmountPaid(totalAmountPaid);
 
+        user.setSubscription(subscription);
+
         subscriptionRepository.save(subscription);
         userRepository.save(user);
         return totalAmountPaid;
